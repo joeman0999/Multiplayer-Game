@@ -94,18 +94,29 @@ function create() {
 function update() {
   this.players.getChildren().forEach((player) => {
     const input = players[player.playerId].input;
-    if (input.left) {
-      player.setAngularVelocity(-300);
-    } else if (input.right) {
-      player.setAngularVelocity(300);
-    } else {
-      player.setAngularVelocity(0);
-    }
+    if (!input.touch) {
+      if (input.left) {
+        player.setAngularVelocity(-300);
+      } else if (input.right) {
+        player.setAngularVelocity(300);
+      } else {
+        player.setAngularVelocity(0);
+      }
 
-    if (input.up) {
-      this.physics.velocityFromRotation(player.rotation + 1.5, 200, player.body.acceleration);
+      if (input.up) {
+        this.physics.velocityFromRotation(player.rotation + 1.5, 200, player.body.acceleration);
+      } else {
+        player.setAcceleration(0);
+      }
     } else {
-      player.setAcceleration(0);
+      if (input.steer) {
+        player.rotation = Math.atan2(input.y - player.y, input.x - player.x) - Math.PI / 2;
+        this.physics.velocityFromRotation(player.rotation + 1.5, 200, player.body.acceleration);
+        player.setAngularVelocity(0);
+      } else {
+        player.setAngularVelocity(0);
+        player.setAcceleration(0);
+      }
     }
 
     players[player.playerId].x = player.x;

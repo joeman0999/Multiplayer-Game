@@ -11,6 +11,11 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
+var Direction = {
+  steer: false,
+  x: 0,
+  y: 0
+}
 
 function preload() {
   this.load.image('ship', 'assets/spaceShips_001.png');
@@ -73,9 +78,44 @@ function create() {
   });
 
   this.cursors = this.input.keyboard.createCursorKeys();
+  this.game.input.addPointer
   this.leftKeyPressed = false;
   this.rightKeyPressed = false;
   this.upKeyPressed = false;
+  this.Dx = 0;
+  this.Dy = 0;
+  this.steer = false;
+  this.game.canvas.id = 'GameArea';
+  document.getElementById("GameArea").addEventListener('touchstart', handleTouchStart);
+  document.getElementById("GameArea").addEventListener('touchmove', handleTouchMove);
+  document.getElementById("GameArea").addEventListener('touchend', handleTouchEnd);
+}
+
+function handleTouchStart(e) {
+  e.preventDefault();
+  Direction = {
+    steer: true,
+    x: e.touches[0].clientX - 9,
+    y: e.touches[0].clientY - 9,
+  }
+}
+
+function handleTouchMove(e) {
+  e.preventDefault();
+  Direction = {
+    steer: true,
+    x: e.touches[0].clientX - 9,
+    y: e.touches[0].clientY - 9,
+  }
+}
+
+function handleTouchEnd(e) {
+  e.preventDefault();
+  Direction = {
+    steer: false,
+    x: 0,
+    y: 0,
+  }
 }
 
 function update() {
@@ -99,7 +139,12 @@ function update() {
   }
 
   if (left !== this.leftKeyPressed || right !== this.rightKeyPressed || up !== this.upKeyPressed) {
-    this.socket.emit('playerInput', { left: this.leftKeyPressed , right: this.rightKeyPressed, up: this.upKeyPressed });
+    this.socket.emit('playerInput', { touch: false, left: this.leftKeyPressed , right: this.rightKeyPressed, up: this.upKeyPressed });
+  } else if (this.Dx !== Direction.x || this.Dy !== Direction.y || this.steer !== Direction.steer) {
+    this.Dx = Direction.x;
+    this.Dy = Direction.y;
+    this.steer = Direction.steer;
+    this.socket.emit('playerInput', { touch: true, steer: Direction.steer, x: Direction.x, y: Direction.y });
   }
 }
 
