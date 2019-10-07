@@ -58,7 +58,7 @@ function create() {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        method: 'update',
+        method: 'post',
         body: JSON.stringify(self.scores),
       })
     } catch (error) {

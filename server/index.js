@@ -21,7 +21,7 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/db', async (req, res) => {
+app.post('/db', async (req, res) => {
   try {
     const client = await pool.connect()
     const result = await client.query('SELECT * FROM scores');
