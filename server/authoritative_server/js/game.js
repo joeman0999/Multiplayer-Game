@@ -53,7 +53,7 @@ function create() {
     io.emit('updateScore', self.scores);
     io.emit('starLocation', { x: self.star.x, y: self.star.y });
     try {
-      const response = await fetch('https://joeman0999.herokuapp.com/db', {
+      const response = fetch('https://joeman0999.herokuapp.com/db', {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
