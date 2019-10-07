@@ -24,8 +24,22 @@ app.get('/', function (req, res) {
 app.get('/db', async (req, res) => {
   try {
     const client = await pool.connect()
-    const result = await client.query('SELECT * FROM test_table');
+    const result = await client.query('SELECT * FROM scores');
     res.status(200).json(result.rows)
+    client.release();
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+  }
+})
+
+app.update('/db', async (req, res) => {
+  try {
+    const { blue, red } = request.body;
+    const client = await pool.connect();
+    const result = await client.query('UPDATE scores SET score = ? WHERE team = ?', [blue, 'blue']);
+    const result2 = await client.query('UPDATE scores SET score = ? WHERE team = ?', [red, 'red']);
+    res.status(200).json(result.rows);
     client.release();
   } catch (err) {
     console.error(err);

@@ -28,6 +28,12 @@ function preload() {
 function create() {
   const self = this;
   this.players = this.physics.add.group();
+  try {
+    const response = await fetch('https://joeman0999.herokuapp.com/db');
+    const Scores = await response.json();
+  } catch (error) {
+    console.log(error);
+  }
 
   this.scores = {
     blue: 0,
@@ -46,6 +52,18 @@ function create() {
     self.star.setPosition(randomPosition(700), randomPosition(500));
     io.emit('updateScore', self.scores);
     io.emit('starLocation', { x: self.star.x, y: self.star.y });
+    try {
+      const response = await fetch('https://joeman0999.herokuapp.com/db', {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        method: 'update',
+        body: JSON.stringify(self.scores),
+      })
+    } catch (error) {
+      console.log(error)
+    }
   });
 
   io.on('connection', function (socket) {
