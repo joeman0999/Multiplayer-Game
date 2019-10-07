@@ -29,8 +29,8 @@ function create() {
   const self = this;
   this.players = this.physics.add.group();
   try {
-    const response = await fetch('https://joeman0999.herokuapp.com/db');
-    const Scores = await response.json();
+    const response = fetch('https://joeman0999.herokuapp.com/db');
+    const Scores = response.json();
   } catch (error) {
     console.log(error);
   }
