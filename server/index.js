@@ -26,6 +26,9 @@ app.get('/db', async (req, res) => {
     const client = await pool.connect()
     const result = await client.query('SELECT * FROM scores');
     res.status(200).json(result.rows)
+    for (let row of res.rows) {
+      console.log(JSON.stringify(row));
+    }
     client.release();
   } catch (err) {
     console.error(err);
@@ -41,6 +44,9 @@ app.post('/db', async (req, res) => {
     const result2 = await client.query('UPDATE scores SET score = ? WHERE team = ?', [red, 'red']);
     res.status(200).json(result.rows);
     client.release();
+    for (let row of res.rows) {
+      console.log(JSON.stringify(row));
+    }
   } catch (err) {
     console.error(err);
     res.send("Error " + err);

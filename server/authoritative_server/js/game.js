@@ -29,8 +29,12 @@ function create() {
   const self = this;
   this.players = this.physics.add.group();
   try {
-    const response = fetch('https://joeman0999.herokuapp.com/db');
+    const response = fetch('https://joeman0999.herokuapp.com/scores');
     const Scores = response.json();
+    for (let row of response.rows) {
+      console.log(JSON.stringify(row));
+    }
+    console.log(JSON.stringify(Scores));
   } catch (error) {
     console.log(error);
   }
@@ -53,7 +57,7 @@ function create() {
     io.emit('updateScore', self.scores);
     io.emit('starLocation', { x: self.star.x, y: self.star.y });
     try {
-      const response = fetch('https://joeman0999.herokuapp.com/db', {
+      const response = fetch('https://joeman0999.herokuapp.com/scores', {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -61,6 +65,9 @@ function create() {
         method: 'post',
         body: JSON.stringify(self.scores),
       })
+      for (let row of response.rows) {
+        console.log(JSON.stringify(row));
+      }
     } catch (error) {
       console.log(error)
     }
